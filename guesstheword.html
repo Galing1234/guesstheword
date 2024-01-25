@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the word!</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box ;
+    }
+
+    body {
+      display: flex ;
+      flex-direction: column ;
+      align-items: center ;
+      background: rgba(0, 0, 0, 0.05) ;
+      font-family: 'Roboto' ;
+      margin: 0 ;
+    } 
+
+    h1 {
+      border-bottom: 3px solid rgb(0, 0, 0) ;
+      font-size: 34px ;
+    }
+
+    input { 
+      aspect-ratio: 1 / 1 ;
+      padding: 5px ;
+      font-size: 20px ;
+      width: 30px ;
+      text-align: center ;
+    }
+
+    .hint {
+      font-size: 18px ;
+      margin: 0 2px ;
+    }
+
+    .word-place {
+      font-size: 100px ;
+      margin-top: 60px ;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guess The Word!</h1>
+  <p class="hint">Hint: Someone from the class</p>
+
+  <div class="word-place">
+    
+  </div>
+
+  <input type="text" minlength="1" maxlength="1" onkeydown="return /[a-z]/i.test(event.key)" class="input">
+
+  <script>
+    const names = [
+      'Gal',
+      'Yahav',
+      'Liron',
+      'Daniel',
+      'Harel',
+      'Mike',
+      'Stav',
+      'Matan',
+      'Sean',
+      'Ariel',
+      'Tomer',
+      'Idan',
+      'Guy',
+      'Ethan',
+      'Itamar',
+      'Shira',
+      'Ori',
+      'Noa',
+      'Reut',
+      'Noga',
+      'Emma',
+      'Noam',
+      'Maayan',
+      'Naama',
+      'Adar',
+      'Adva'
+    ] ;
+    
+    function game() {
+      const wordPlace = document.querySelector('.word-place') ;
+      const randomIndex = Math.floor(Math.random() * names.length) ;
+      const randomName = names[randomIndex] ;
+      const input = document.querySelector('.input') ;
+      const restartButton = document.querySelector('.restart-button') ;
+      const lettersGuessed = [] ;
+
+      let wordPlaceHTML = '' ;
+      let randomNameLength = randomName.length ;
+      let i ;
+      let numOfLettersGuessed = 0 ;
+
+      for (i = 0 ; i < randomNameLength ; i++) {
+        wordPlaceHTML += '_ ' ;
+        changeWordPlace() ;
+      }
+
+      input.addEventListener('focus', () => {
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' && input.value !== '') handleUserInput() ;
+        }) ;
+      }) ;
+
+      String.prototype.replaceAt = function (index, char) {
+        let a = this.split("") ;
+        a[index] = char ;
+        return a.join("") ;
+      }
+
+      function changeWordPlace() {
+        wordPlace.innerHTML = wordPlaceHTML ;
+      }
+
+      function handleUserInput() {
+        for (i = 0 ; i < randomNameLength ; i++) {
+          if (randomName[i].toLowerCase() === (input.value).toLowerCase()) {
+            wordPlaceHTML = wordPlaceHTML.replaceAt(i * 2, input.value) ;
+            numOfLettersGuessed++ ;
+            lettersGuessed.push(randomName[i]) ;
+            changeWordPlace() ;
+            checkForWin() ;
+          }
+        }
+      }
+
+      function checkForWin() {
+        if (numOfLettersGuessed === randomName.length) {
+          console.log('bro won 💀') ;
+        }
+      }
+    }
+
+    game() ;
+  </script>
+</body>
+</html>
